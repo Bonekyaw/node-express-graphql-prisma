@@ -33,6 +33,17 @@ DATABASE_URL="postgresql://username:password@localhost:5432/mydb?schema=public"
 TOKEN_SECRET="something hard to guest"
 
 ```
+Please note.   
+*TOKEN_SECRET* should be complex and hard to guest.  
+After git clone, it should be run.
+
+```
+npm install
+npm start
+
+```   
+Warning - every `*.graphql & *.resolver.js` must be inside three nested folders `./**/**/**/file` .  
+It's ok `./src/graphql/auth/auth.graphql` or `./src/graphql/product/product.graphql` or something like that.  
 
 If you have something hard to solve,
 DM  
