@@ -37,5 +37,5 @@ exports.updateAdmin = async (id, adminData) => {
 };
 
 exports.getAllAdmins = async ( filteredData ) => {
-  return await prisma.admin.findMany( filteredData );
+  return prisma.admin.findMany( filteredData );
 };
