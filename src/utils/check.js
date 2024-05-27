@@ -73,3 +73,30 @@ exports.checkOtpErrorIfSameDate = (isSameDate, otpCheck) => {
     });
   }
 };
+
+exports.checkUploadFile = (image) => {
+  if (!image) {
+    const err = new Error("It is not a valid image.");
+    err.status = 409;
+    throw err;
+  }
+};
+
+exports.checkAdmin = (admin) => {
+  if (!admin) {
+    const err = new Error("This account has not registered!.");
+    err.status = 401;
+    throw err;
+  }
+};
+
+exports.checkAdminExist = (admin) => {
+  if (!admin) {
+    throw new GraphQLError("This account has not registered!.", {
+      extensions: {
+        code: "CONFLICT",
+        http: { status: 401 },
+      },
+    });
+  }
+};

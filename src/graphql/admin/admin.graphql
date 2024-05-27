@@ -1,0 +1,12 @@
+type UploadedProfileResponse {
+  message: String!
+  imageUrl: String!
+}
+
+input UploadFileInput {
+  imageUrl: String!
+}
+
+type Mutation {
+  uploadProfile(userInput: UploadFileInput): UploadedProfileResponse
+}

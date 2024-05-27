@@ -19,6 +19,7 @@ type Admin {
   status: String
   lastLogin: String
   error: Int
+  profile: String
   createdAt: String!
   updatedAt: String!
 }

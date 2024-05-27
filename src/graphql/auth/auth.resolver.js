@@ -15,7 +15,7 @@ const {
   validatePhone,
   checkOtpErrorIfSameDate,
   checkOtpPhone,
-} = require("../../middlewares/check");
+} = require("../../utils/check");
 
 const {
   getAdminByPhone,
@@ -24,7 +24,7 @@ const {
   updateOtp,
   createAdmin,
   updateAdmin,
-} = require("../../services/authService.js");
+} = require("../../services/authService");
 
 const rand = () => Math.random().toString(36).substring(2);
 

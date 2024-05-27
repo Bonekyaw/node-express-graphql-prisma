@@ -13,7 +13,9 @@ const { loadFilesSync } = require("@graphql-tools/load-files");
 const { loadSchemaSync } = require("@graphql-tools/load");
 const { GraphQLFileLoader } = require("@graphql-tools/graphql-file-loader");
 
-const { limiter } = require("./middlewares/rateLimiter.js");
+const { limiter } = require("./utils/rateLimiter.js");
+const isAuth = require("./middlewares/isAuth");
+const fileRoute = require("./routes/v1/file");
 
 const app = express();
 
@@ -44,6 +46,11 @@ app.all(
   createHandler({
     schema: schema,
     rootValue: resolvers,
+    context: (req) => {
+      return {
+        authHeader: req.headers.authorization,
+      };
+    }
   })
 );
 
@@ -53,10 +60,20 @@ app.get("/", (_req, res) => {
   res.end(ruruHTML({ endpoint: "/graphql" }))
 })
 
+// Other way is to use graphql-upload. But I prefer the way of
+// seperating file upload from graphql api.
+// This approach leverages the strengths of both REST and GraphQL
+// and can simplify the file upload process.
+app.use("/api/v1", isAuth, fileRoute);
+
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
-
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message;
+  res.status(status).json({ error: message });
+});

@@ -8,6 +8,7 @@ CREATE TABLE "Admin" (
     "status" TEXT NOT NULL DEFAULT 'active',
     "lastLogin" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "error" INTEGER NOT NULL DEFAULT 0,
+    "profile" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
