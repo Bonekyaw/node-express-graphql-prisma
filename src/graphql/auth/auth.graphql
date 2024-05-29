@@ -20,6 +20,7 @@ type Admin {
   lastLogin: String
   error: Int
   profile: String
+  randToken: String!
   createdAt: String!
   updatedAt: String!
 }
@@ -34,7 +35,15 @@ type AuthDataResponse {
   message: String!
   token: String!
   phone: String!
-  userId: String!
+  userId: ID!
+  randomToken: String!
+}
+
+type RefreshTokenResponse {
+  message: String!
+  token: String!
+  userId: ID!
+  randomToken: String!
 }
 
 input OtpCheckInput {
@@ -53,6 +62,11 @@ input AuthUser {
   password: String!
 }
 
+input RefreshTokenInput {
+  userId: ID!
+  randomToken: String!
+}
+
 type Query {
   admins: Admin!
 }
@@ -65,4 +79,5 @@ type Mutation {
     userInput: PasswordConfirmInput
   ): AuthDataResponse
   login(userInput: PasswordConfirmInput): AuthDataResponse
+  refreshToken(userInput: RefreshTokenInput): RefreshTokenResponse
 }
