@@ -87,12 +87,12 @@ const isAuthenticated = () => (next) => (parent, args, context, info) => {
   return next(parent, args, context, info);
 };
 
-const hasRole = (role) => (next) =>
+const hasRole = (...role) => (next) =>
   asyncHandler(async (root, args, context, info) => {
     let adminId = info.adminId;
     const admin = await getAdminById(adminId);
     checkAdminExist(admin);
-    authorise(false, admin, role);
+    authorise(false, admin, ...role);
     info.admin = admin;
 
     return next(root, args, context, info);
