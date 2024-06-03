@@ -7,6 +7,6 @@ const { uploadProfile } = require('../../controllers/fileUploadController');
 // Upload single image
 router.put('/admins/upload', upload.single('avatar'), uploadProfile );
 // Upload multiple images
-// router.put('/admins/:id/upload',upload.array('avatar'), uploadProfile );
+// router.put('/admins/upload',upload.array('avatar'), uploadProfile );
 
 module.exports = router;

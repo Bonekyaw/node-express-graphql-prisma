@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const jwt = require("jsonwebtoken");
+const { GraphQLError } = require("graphql");
 
 const checkAuth = (param) => {
   if (!param) {

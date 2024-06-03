@@ -15,7 +15,9 @@ In this node/express template
    - bcrypt
    - validator 
    - error handler 
-   - file uploading etc.
+   - file uploading 
+   - Authorization
+   - Pagination etc.
 
 In order to use it,
 

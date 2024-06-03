@@ -1,22 +1,9 @@
 type Otp {
-  _id: ID!
+  id: ID!
   phone: String!
   otp: String!
   count: Int!
   error: Int
-  createdAt: String!
-  updatedAt: String!
-}
-
-type Admin {
-  _id: ID!
-  name: String
-  phone: String!
-  role: String
-  status: String
-  lastLogin: String
-  error: Int
-  profile: String
   createdAt: String!
   updatedAt: String!
 }
@@ -61,10 +48,6 @@ input AuthUser {
 input RefreshTokenInput {
   userId: ID!
   randomToken: String!
-}
-
-type Query {
-  admins: Admin!
 }
 
 type Mutation {

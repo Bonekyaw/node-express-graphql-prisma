@@ -6,9 +6,13 @@ const asyncHandler = require("express-async-handler");
 // const { v4: uuidv4 } = require("uuid");
 const validator = require("validator");
 const { GraphQLError } = require("graphql");
+const { PrismaClient } = require("@prisma/client"); // { Prisma, PrismaClient }
+const prisma = new PrismaClient();
 
 const { checkAdminExist } = require("../../utils/check");
 const isAuth = require("../../utils/isAuth");
+const { offset, noCount, cursor } = require("../../utils/paginate");
+const authorise = require("../../utils/authorise");
 const { getAdminById } = require("../../services/adminService");
 const { updateAdmin } = require("../../services/authService");
 
@@ -16,6 +20,7 @@ const resolvers = {
   Mutation: {
     uploadProfile: asyncHandler(async (parent, args, context, info) => {
       let adminId = info.adminId;
+      // let admin = info.admin;
       let imageUrl = args.userInput.imageUrl;
       if (
         validator.isEmpty(imageUrl.trim()) ||
@@ -31,9 +36,6 @@ const resolvers = {
 
       imageUrl = validator.escape(imageUrl);
 
-      const admin = await getAdminById(adminId);
-      checkAdminExist(admin);
-
       const adminData = {
         profile: imageUrl,
       };
@@ -46,6 +48,22 @@ const resolvers = {
     }),
     //
   },
+  Query: {
+    // Pagination Query
+    paginateAdmins: asyncHandler(async (parent, args, context, info) => {
+      let { page, cursors, limit } = args;
+
+      const filters = { status: "active" };
+      // const order = { createdAt: "desc" };
+      const order = { id: "desc" };
+
+      return offset(prisma.admin, page, limit, filters, order);
+      // return noCount(
+      //   prisma.admin, page, limit, filters, order
+      // );
+      // return cursor(prisma.admin, cursors, limit, filters, order);
+    }),
+  },
 };
 
 // Resolvers Composition like auth middleware in REST
@@ -53,7 +71,7 @@ const resolvers = {
 const isAuthenticated = () => (next) => (parent, args, context, info) => {
   checkAdminExist(context.authHeader);
   let token = context.authHeader.split(" ")[1]; // Hey take care!
-  
+
   if (validator.isEmpty(token.trim()) || !validator.isJWT(token)) {
     throw new GraphQLError("Token must not be invalid.", {
       extensions: {
@@ -69,17 +87,21 @@ const isAuthenticated = () => (next) => (parent, args, context, info) => {
   return next(parent, args, context, info);
 };
 
+const hasRole = (role) => (next) =>
+  asyncHandler(async (root, args, context, info) => {
+    let adminId = info.adminId;
+    const admin = await getAdminById(adminId);
+    checkAdminExist(admin);
+    authorise(false, admin, role);
+    info.admin = admin;
+
+    return next(root, args, context, info);
+  });
+
 const resolversComposition = {
-  "Mutation.uploadProfile": [isAuthenticated()],
+  "Mutation.uploadProfile": [isAuthenticated(), hasRole("user")],
+  "Query.paginateAdmins": [isAuthenticated(), hasRole("user")],
 };
 
 const composedResolvers = composeResolvers(resolvers, resolversComposition);
 module.exports = composedResolvers;
-
-// const hasRole = (role: string) => next => (root, args, context, info) => {
-//   if (!context.currentUser.roles?.includes(role)) {
-//     throw new Error('You are not authorized!')
-//   }
-
-//   return next(root, args, context, info)
-// }

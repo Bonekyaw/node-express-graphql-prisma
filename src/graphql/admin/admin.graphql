@@ -1,3 +1,30 @@
+type Admin {
+  id: ID!
+  name: String
+  phone: String!
+  role: String
+  status: String
+  lastLogin: String
+  profile: String
+  createdAt: String!
+}
+
+type AdminPaginateResponse {
+  total: Int
+  data: [Admin]
+  pageInfo: PageInfo
+}
+
+type PageInfo {
+  currentPage: Int
+  previousPage: Int
+  nextPage: Int
+  lastPage: Int
+  countPerPage: Int
+  nextCursor: String
+  hasNextPage: Boolean
+}
+
 type UploadedProfileResponse {
   message: String!
   imageUrl: String!
@@ -5,6 +32,10 @@ type UploadedProfileResponse {
 
 input UploadFileInput {
   imageUrl: String!
+}
+
+type Query {
+  paginateAdmins(page: Int, cursors: String, limit: Int ): AdminPaginateResponse
 }
 
 type Mutation {

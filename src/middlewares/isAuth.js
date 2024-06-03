@@ -6,7 +6,7 @@ const checkAuth = (param) => {
   if (!param) {
     const err = new Error("You are not an authenticated user!.");
     err.status = 401;
-    throw err;
+    return next(err);
   }
 };
 
@@ -20,7 +20,7 @@ const isAuth = (req, res, next) => {
     decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
   } catch (error) {
     error.status = 500;
-    throw error;
+    return next(error);
   }
 
   checkAuth(decodedToken);

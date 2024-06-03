@@ -15,6 +15,7 @@ const { GraphQLFileLoader } = require("@graphql-tools/graphql-file-loader");
 
 const { limiter } = require("./utils/rateLimiter.js");
 const isAuth = require("./middlewares/isAuth");
+const authorise = require("./middlewares/authorise.js");
 const fileRoute = require("./routes/v1/file");
 
 const app = express();
@@ -64,7 +65,7 @@ app.get("/", (_req, res) => {
 // seperating file upload from graphql api.
 // This approach leverages the strengths of both REST and GraphQL
 // and can simplify the file upload process.
-app.use("/api/v1", isAuth, fileRoute);
+app.use("/api/v1", isAuth, authorise(false, "user"), fileRoute);
 
 const PORT = process.env.PORT || 8080;
 
