@@ -200,7 +200,7 @@ authorise(true, user, "admin");
 `ture, "admin"` === `false, "user", "supplier"`  
 `false, "user"` === `true, "admin", "supplier"`
   
-`true, user, "admin"` In these parameters, admin param is an instance model of the database table.  
+`true, user, "admin"` In these parameters, user param is an instance model of the database table.  
 
 In this graphql starter kit,  
 I built authentication & authorization with the help of composeResolvers tool.
